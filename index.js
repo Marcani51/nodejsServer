@@ -1,16 +1,29 @@
-const express = require("express");
+const express = require('express');
+const path = require('path'); /// for accesig path globally
 const port="3000"
 const app = express()
 
-// app.use((req,res)=>{
-//     console.log("new request")
-//     res.send("<input type='text' />");
-// })
+//config ejs
+app.set('view engine','ejs');
+///config join directory
+app.set('views', path.join(__dirname,'/views'));
 
+/////////ejs template////////////
 app.get('/',(req,res)=>{
-    res.send("<h1>welcome to home page</h1>");
+    res.render('home');
+})
+app.get('/r/:subPage',(req,res)=>{
+    const {subPage}= req.params;
+    res.render('subPage',{subPage});
 })
 
+app.get('/rand',(req,res)=>{
+    const number =Math.floor(Math.random() *10)+1;
+    res.render('random',{number}); //ditransfer dalam bentu object
+})
+
+
+////////////////////////////
 app.get('/cats',(req,res)=>{
     res.send("Meow");
 })
