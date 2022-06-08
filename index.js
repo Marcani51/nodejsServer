@@ -3,12 +3,12 @@ const path = require('path'); /// for accesig path globally
 const port="3000"
 const app = express()
 
-//config ejs
+//config ejs///////////////////
 app.set('view engine','ejs');
-///config join directory
+///config join directory///////////////////
 app.set('views', path.join(__dirname,'/views'));
 
-/////////ejs template////////////
+/////////ejs template////////////////////////
 app.get('/',(req,res)=>{
     res.render('home');
 })
@@ -21,9 +21,7 @@ app.get('/rand',(req,res)=>{
     const number =Math.floor(Math.random() *10)+1;
     res.render('random',{number}); //ditransfer dalam bentu object
 })
-
-
-////////////////////////////
+//////////////////////////////////////////
 app.get('/cats',(req,res)=>{
     res.send("Meow");
 })
@@ -43,7 +41,7 @@ app.get('/r/:subPage/:postId',(req,res)=>{
 
 })
 
-///query string
+///query string/////////////
 app.get('/search',(req,res)=>{
     console.log(req.query);
     const{q}= req.query;
