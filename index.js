@@ -22,13 +22,6 @@ app.get('/rand',(req,res)=>{
     res.render('random',{number}); //ditransfer dalam bentu object
 })
 //////////////////////////////////////////
-app.get('/cats',(req,res)=>{
-    res.send("Meow");
-})
-app.get('/dogs',(req,res)=>{
-    res.send("Woof");
-})
-
 app.post('/cats',(req,res)=>{
     res.send("this post method")
 })
