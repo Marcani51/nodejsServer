@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/app.css">
+    <title><%= name %> </title>
+</head>
+<body>
+    <h1>Browsing the <%= name  %> subpage </h1>
+    <h2><%= description %>  </h2>
+    <p1><%=subscribers %> total subs</p1>
+    <hr>
+    <% for(let post of posts){%>
+        <article>
+            <p><%= post.title  %> -<b><%= post.author%></b> </p>
+                <%if(post.img){%>
+                    <img src="<%= post.img %>" style="max-width: 200px;">
+                <%}%>
+            
+        </article>
+    <% }%>
+</body>
+</html>
