@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+
 ////untuk buat uniqe id////////////////
 const {v4: uuidv4}=require('uuid');
 ///untuk buat method override karena untuk action selain get hrus lewat post (dele put patch)/////////
@@ -14,7 +15,6 @@ app.set('views',path.join(__dirname,'views'));
 app.set('view engine', 'ejs');
 
 //fake DB
-
 let comments=[
   {
     id: uuidv4(),
@@ -39,6 +39,11 @@ let comments=[
     comment:'test4'
   },
 ]
+
+//////////////// CREATE CONNECTION TO DB//////
+const connectToDb = require('./config/db');
+connectToDb();
+//////////////////////////////////////////////////
 
 app.get('/comments',(req,res)=>{
   res.render('comments/index',{comments});
