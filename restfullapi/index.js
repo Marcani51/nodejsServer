@@ -1,104 +1,156 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const path = require('path');
-
+const path = require("path");
+const Movie = require("./models/movie");
 ////untuk buat uniqe id////////////////
-const {v4: uuidv4}=require('uuid');
+const { v4: uuidv4 } = require("uuid");
 ///untuk buat method override karena untuk action selain get hrus lewat post (dele put patch)/////////
-const methodOverride= require('method-override');
+const methodOverride = require("method-override");
 //////// encode apapun model req
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
 /////untuk mencari method pada query strings
-app.use(methodOverride('_method'))
+app.use(methodOverride("_method"));
 app.use(express.json());
-app.set('views',path.join(__dirname,'views'));
-app.set('view engine', 'ejs');
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
 //fake DB
-let comments=[
+let comments = [
   {
     id: uuidv4(),
-    username:'denta',
-    comment:'test'
+    username: "denta",
+    comment: "test",
   },
   {
-    id:uuidv4(),
-    username:'user1',
-    comment:'test1'
-  },{
-    id:uuidv4(),
-    username:'user2',
-    comment:'test2'
-  },{
-    id:uuidv4(),
-    username:'user3',
-    comment:'test3'
-  },{
-    id:uuidv4(),
-    username:'user4',
-    comment:'test4'
+    id: uuidv4(),
+    username: "user1",
+    comment: "test1",
   },
-]
+  {
+    id: uuidv4(),
+    username: "user2",
+    comment: "test2",
+  },
+  {
+    id: uuidv4(),
+    username: "user3",
+    comment: "test3",
+  },
+  {
+    id: uuidv4(),
+    username: "user4",
+    comment: "test4",
+  },
+];
 
-//////////////// CREATE CONNECTION TO DB//////
-const connectToDb = require('./config/db');
+//////////////// CREATE CONNECTION TO DB ///////////////////
+const Product = require("./models/product");
+const connectToDb = require("./config/db");
 connectToDb();
-//////////////////////////////////////////////////
 
-app.get('/comments',(req,res)=>{
-  res.render('comments/index',{comments});
-})
+const seedProducts = [
+  {
+    name: "fairy eggplant",
+    price: 1.0,
+    category: "vegetable",
+  },
+  {
+    name: "organic goddes melon",
+    price: 4.99,
+    category: "fruit",
+  },
+  {
+    name: "organic mini seedless watermelon",
+    price: 3.99,
+    category: "fruit",
+  },
+  {
+    name: "organic celery",
+    price: 1.5,
+    category: "vegetable",
+  },
+  {
+    name: "chocolate whole milk",
+    price: 2.69,
+    category: "dairy",
+  },
+];
+// const p = new Product({
+//   name: "Ruby Grapefruit",
+//   price: 1.99,
+//   category: "fruit",
+// });
 
-app.get('/comments/new',(req,res)=>{
-res.render('comments/new');
-})
+// p.save()
+//   .then((p) => {
+//     console.log(p);
+//   })
+//   .catch((e) => {
+//     console.log(e);
+//   });
 
-app.post('/comments',(req,res)=>{
+// Product.insertMany(seedProducts)
+//   .then((res) => {
+//     console.log(res);
+//   })
+//   .catch((e) => {
+//     console.log(e);
+//   });
+///////////////////////////////////////////////////////
+
+app.get("/comments", (req, res) => {
+  res.render("comments/index", { comments });
+});
+
+app.get("/comments/new", (req, res) => {
+  res.render("comments/new");
+});
+
+app.post("/comments", (req, res) => {
   console.log(req.body);
-  const{username,comment}= req.body;
-  comments.push({username,comment, id:uuidv4()});
+  const { username, comment } = req.body;
+  comments.push({ username, comment, id: uuidv4() });
   ////untuk redirect ke url lain
-  res.redirect('/comments');
-})
+  res.redirect("/comments");
+});
 
-app.patch('/comments/:id',(req,res)=>{
-  const{id}=req.params;
+app.patch("/comments/:id", (req, res) => {
+  const { id } = req.params;
   const newCommentText = req.body.comment;
-  const foundComment=comments.find(c=>  c.id  === id)
-  foundComment.comment=newCommentText;
-  res.redirect('/comments');
-})
+  const foundComment = comments.find((c) => c.id === id);
+  foundComment.comment = newCommentText;
+  res.redirect("/comments");
+});
 
-app.get('/comments/:id',(req,res)=>{
-  const {id}=req.params;
-  const comment=comments.find(c=>  c.id  === id)
-  res.render('comments/show',{comment});
-})
+app.get("/comments/:id", (req, res) => {
+  const { id } = req.params;
+  const comment = comments.find((c) => c.id === id);
+  res.render("comments/show", { comment });
+});
 
-app.get('/comments/:id/edit',(req,res)=>{
-  const {id}=req.params;
-  const comment = comments.find(c=>c.id===id);
-  res.render('comments/edit',{comment})
-})
+app.get("/comments/:id/edit", (req, res) => {
+  const { id } = req.params;
+  const comment = comments.find((c) => c.id === id);
+  res.render("comments/edit", { comment });
+});
 
-app.delete('/comments/:id',(req,res)=>{
-  const {id}=req.params;
-  comments=comments.filter(c=>c.id !== id);
-  res.redirect('/comments');
-})
+app.delete("/comments/:id", (req, res) => {
+  const { id } = req.params;
+  comments = comments.filter((c) => c.id !== id);
+  res.redirect("/comments");
+});
 
-
-app.get('/tacos',(req,res)=>{
+app.get("/tacos", (req, res) => {
   res.send("get /tacos response");
-})
+});
 
-app.post('/tacos',(req,res)=>{
+app.post("/tacos", (req, res) => {
   console.log(req.body);
-  const {meat,qty}= req.body;
+  const { meat, qty } = req.body;
 
   res.send(`Ok, there is the order ${qty} ${meat} tacos`);
-})
-app.listen(3000, ()=>{
-  console.log("on port 3000");
-})
+});
 
+app.listen(3000, () => {
+  console.log("on port 3000");
+});
