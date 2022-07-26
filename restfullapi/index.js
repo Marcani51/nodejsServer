@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 /////untuk mencari method pada query strings
 app.use(methodOverride("_method"));
 app.use(express.json());
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -43,38 +44,11 @@ let comments = [
   },
 ];
 
-//////////////// CREATE CONNECTION TO DB ///////////////////
+//////////////// CREATE CONNECTION TO DB ////////////////////////////
 const Product = require("./models/product");
 const connectToDb = require("./config/db");
+const { AsyncLocalStorage } = require("async_hooks");
 connectToDb();
-
-const seedProducts = [
-  {
-    name: "fairy eggplant",
-    price: 1.0,
-    category: "vegetable",
-  },
-  {
-    name: "organic goddes melon",
-    price: 4.99,
-    category: "fruit",
-  },
-  {
-    name: "organic mini seedless watermelon",
-    price: 3.99,
-    category: "fruit",
-  },
-  {
-    name: "organic celery",
-    price: 1.5,
-    category: "vegetable",
-  },
-  {
-    name: "chocolate whole milk",
-    price: 2.69,
-    category: "dairy",
-  },
-];
 // const p = new Product({
 //   name: "Ruby Grapefruit",
 //   price: 1.99,
@@ -96,7 +70,33 @@ const seedProducts = [
 //   .catch((e) => {
 //     console.log(e);
 //   });
-///////////////////////////////////////////////////////
+app.get("/products", async (req, res) => {
+  const products = await Product.find({});
+  console.log(products);
+  res.render("products/index", { products });
+});
+
+app.get("/products/new", (req, res) => {
+  res.render("products/new");
+});
+
+app.get("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const products = await Product.findById(id);
+  res.render("products/show", { products });
+});
+
+app.post("/products", async (req, res) => {
+  const newProduct = new Product(req.body);
+  await newProduct.save();
+  res.redirect(`/products/${newProduct._id}`);
+});
+app.delete("/products/:id", (req, res) => {
+  const { id } = req.params;
+  comments = comments.filter((c) => c.id !== id);
+  res.redirect("/products");
+});
+/////////////////////////////////////////////////////////////
 
 app.get("/comments", (req, res) => {
   res.render("comments/index", { comments });
