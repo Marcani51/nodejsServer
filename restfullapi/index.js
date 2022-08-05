@@ -21,55 +21,15 @@ let comments = [
     id: uuidv4(),
     username: "denta",
     comment: "test",
-  },
-  {
-    id: uuidv4(),
-    username: "user1",
-    comment: "test1",
-  },
-  {
-    id: uuidv4(),
-    username: "user2",
-    comment: "test2",
-  },
-  {
-    id: uuidv4(),
-    username: "user3",
-    comment: "test3",
-  },
-  {
-    id: uuidv4(),
-    username: "user4",
-    comment: "test4",
-  },
+  }
 ];
 
-//////////////// CREATE CONNECTION TO DB ////////////////////////////
+////////////////// CREATE CONNECTION TO DB /////////////////////////////////////////////////////////////////////////////////////////
 const Product = require("./models/product");
 const connectToDb = require("./config/db");
 const { AsyncLocalStorage } = require("async_hooks");
 connectToDb();
-// const p = new Product({
-//   name: "Ruby Grapefruit",
-//   price: 1.99,
-//   category: "fruit",
-// });
 
-// p.save()
-//   .then((p) => {
-//     console.log(p);
-//   })
-//   .catch((e) => {
-//     console.log(e);
-//   });
-
-// Product.insertMany(seedProducts)
-//   .then((res) => {
-//     console.log(res);
-//   })
-//   .catch((e) => {
-//     console.log(e);
-//   });
 app.get("/products", async (req, res) => {
   const products = await Product.find({});
   console.log(products);
@@ -96,7 +56,12 @@ app.delete("/products/:id", (req, res) => {
   comments = comments.filter((c) => c.id !== id);
   res.redirect("/products");
 });
-/////////////////////////////////////////////////////////////
+app.get("/products/:id/edit", async (req, res) => {
+  const {id} = req.params;
+  const product = await Product.findById(id);
+  res.render("products/edit",{product});
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("/comments", (req, res) => {
   res.render("comments/index", { comments });
